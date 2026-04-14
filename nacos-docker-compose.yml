@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+    nacos-server:
+        image: 'nacos/nacos-server:latest'
+        ports:
+            - '9848:9848'
+            - '8848:8848'
+            - '8083:8080'
+        environment:
+            - NACOS_AUTH_IDENTITY_VALUE=SecretValue2025!
+            - NACOS_AUTH_IDENTITY_KEY=ServerIdentity
+            - NACOS_AUTH_TOKEN=SecretKey012345678901234567890123456789012345678901234567890123456789012
+            - MODE=standalone
+        container_name: nacos-standalone-derby

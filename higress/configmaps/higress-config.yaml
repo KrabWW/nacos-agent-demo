@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: higress-config
+  namespace: higress-system
+  creationTimestamp: "2000-01-01T00:00:00Z"
+  resourceVersion: "1"
+data:
+  higress: |-
+    mcpServer:
+      sse_path_suffix: /sse  # SSE 连接的路径后缀
+      enable: true          # 启用 MCP Server
+      redis:
+        address: 192.168.31.155:6379
+        username: ""
+        password: ""
+        db: 0
+      match_list:
+        - match_rule_domain: "*"
+          match_rule_path: /mcp
+          match_rule_type: "prefix"
+      servers: []
+    downstream:
+    # 以下配置无需修改，此处省略

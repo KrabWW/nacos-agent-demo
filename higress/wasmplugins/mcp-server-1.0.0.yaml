@@ -1,0 +1,127 @@
+apiVersion: extensions.higress.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  annotations:
+    higress.io/wasm-plugin-description: Host MCP servers for AI tool integration.
+    higress.io/wasm-plugin-icon: https://img.alicdn.com/imgextra/i1/O1CN01wv8H4g1mS4MUzC1QC_!!6000000004952-2-tps-1764-597.png
+    higress.io/wasm-plugin-title: MCP Server
+  creationTimestamp: "2026-04-13T17:48:21Z"
+  labels:
+    higress.io/resource-definer: higress
+    higress.io/wasm-plugin-built-in: "true"
+    higress.io/wasm-plugin-category: ai
+    higress.io/wasm-plugin-name: mcp-server
+    higress.io/wasm-plugin-version: 1.0.0
+  managedFields:
+  - apiVersion: extensions.higress.io/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:higress.io/wasm-plugin-description: {}
+          f:higress.io/wasm-plugin-icon: {}
+          f:higress.io/wasm-plugin-title: {}
+        f:labels:
+          .: {}
+          f:higress.io/resource-definer: {}
+          f:higress.io/wasm-plugin-built-in: {}
+          f:higress.io/wasm-plugin-category: {}
+          f:higress.io/wasm-plugin-name: {}
+          f:higress.io/wasm-plugin-version: {}
+      f:spec:
+        f:defaultConfigDisable: {}
+        f:failStrategy: {}
+        f:matchRules: {}
+        f:priority: {}
+        f:url: {}
+    manager: Kubernetes Java Client
+    operation: Update
+    time: "2026-04-13T17:48:21Z"
+  name: mcp-server-1.0.0
+  namespace: higress-system
+  resourceVersion: "1"
+spec:
+  defaultConfigDisable: true
+  failStrategy: FAIL_OPEN
+  matchRules:
+  - config:
+      server:
+        name: rest-api-server
+      tools:
+      - description: 查询指定城市的天气信息，包括温度、湿度、风力等
+        name: query_weather
+        requestTemplate:
+          method: GET
+          url: http://host.docker.internal:19001/api/weather?city={{.city}}
+        responseTemplate:
+          body: |-
+            {{- with .data }}
+            城市: {{.city}}
+            天气: {{.weather}}
+            温度: {{.temp}}°C
+            湿度: {{.humidity}}
+            风力: {{.wind}}
+            {{- end }}
+      - description: 根据关键词搜索商品
+        name: search_products
+        requestTemplate:
+          method: GET
+          url: http://host.docker.internal:19001/api/products?keyword={{.keyword}}
+        responseTemplate:
+          body: |-
+            {{- with .data }}
+            共找到 {{.total}} 个商品:
+            {{- range .items }}
+            - [{{.id}}] {{.name}} | ¥{{.price}} | 库存:{{.stock}} | 分类:{{.category}}
+            {{- end }}
+            {{- end }}
+      - description: 根据商品ID获取商品详细信息
+        name: get_product_detail
+        requestTemplate:
+          method: GET
+          url: http://host.docker.internal:19001/api/products/{{.product_id}}
+        responseTemplate:
+          body: |-
+            {{- with .data }}
+            商品详情:
+              ID: {{.id}}
+              名称: {{.name}}
+              价格: ¥{{.price}}
+              分类: {{.category}}
+              库存: {{.stock}}
+            {{- end }}
+      - description: 创建订单，需要指定商品ID和数量
+        name: create_order
+        requestTemplate:
+          body: '{"product_id": {{.product_id}}, "quantity": {{.quantity}}, "address":
+            "{{.address}}"}'
+          method: POST
+          url: http://host.docker.internal:19001/api/order/create
+        responseTemplate:
+          body: |-
+            {{- with .data }}
+            订单创建成功!
+              订单号: {{.order_id}}
+              商品: {{.product_name}}
+              总价: ¥{{.total_price}}
+              状态: {{.status}}
+            {{- end }}
+      - description: 获取服务器当前时间
+        name: get_server_time
+        requestTemplate:
+          method: GET
+          url: http://host.docker.internal:19001/api/time
+        responseTemplate:
+          body: |-
+            {{- with .data }}
+            服务器时间: {{.datetime}}
+            时区: {{.timezone}}
+            时间戳: {{.timestamp}}
+            {{- end }}
+    configDisable: false
+    ingress:
+    - ceshi
+  priority: 999
+  url: http://localhost:8002/plugins/mcp-server/1.0.0/plugin.wasm
+status: {}

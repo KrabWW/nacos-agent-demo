@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+    higress:
+        image: 'higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/all-in-one:latest'
+        ports:
+            - '8443:8443'
+            - '8080:8080'
+            - '8001:8001'
+        volumes:
+            - '${PWD}:/data'
+        container_name: higress-ai

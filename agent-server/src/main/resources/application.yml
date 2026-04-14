@@ -1,0 +1,44 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: agent-server-demo
+  ai:
+    anthropic:
+      api-key: ${MINIMAX_API_KEY:sk-cp-q51N08NgbMVvHgsBTrY9q0ZvZmsXebziJkjFUsgKefnVl3VtQeldgwE6abk9X-PFuZBUsUf65stxFVwvPl2CtAPTFFA1VwYVzTxyycJCgFmgCKEXUUzCsas}
+      base-url: https://api.minimaxi.com/anthropic
+      chat:
+        options:
+          model: deepseek-chat
+          max-tokens: 256
+
+    alibaba:
+      a2a:
+        # Nacos 连接配置
+        nacos:
+          server-addr: ${NACOS_ADDRESS:localhost:8848}
+          username: ${NACOS_USERNAME:nacos}
+          password: ${NACOS_PASSWORD:nacos}
+          registry:
+            enabled: true
+        # A2A Server 配置
+        server:
+          version: 1.0.0
+          card:
+            url: http://localhost:9999/a2a
+          skills:
+            - id: nacos-question-answer
+              name: Nacos Question Answer
+              description: Answer questions about Nacos.
+              tags:
+                - Nacos
+                - FAQ
+              examples:
+                - What is Nacos?
+                - How to deploy Nacos cluster?
+              icon-url: https://img.alicdn.com/imgextra/i4/O1CN01rW3vAB1FDWKSOiFf0_!!6000000000453-2-tps-204-40.png
+              documentation-url: https://nacos.io
+          provider:
+            organization: Demo
+            url: https://nacos.io

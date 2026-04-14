@@ -1,0 +1,26 @@
+server:
+  port: 10011
+
+spring:
+  application:
+    name: weather-agent
+  ai:
+    anthropic:
+      api-key: ${MINIMAX_API_KEY:sk-cp-q51N08NgbMVvHgsBTrY9q0ZvZmsXebziJkjFUsgKefnVl3VtQeldgwE6abk9X-PFuZBUsUf65stxFVwvPl2CtAPTFFA1VwYVzTxyycJCgFmgCKEXUUzCsas}
+      base-url: https://api.minimaxi.com/anthropic
+      chat:
+        options:
+          model: deepseek-chat
+          max-tokens: 256
+    alibaba:
+      a2a:
+        nacos:
+          server-addr: ${NACOS_ADDRESS:localhost:8848}
+          username: ${NACOS_USERNAME:nacos}
+          password: ${NACOS_PASSWORD:nacos}
+          registry:
+            enabled: true
+        server:
+          version: 1.0.0
+          card:
+            url: http://localhost:10011/a2a

@@ -1,0 +1,8 @@
+version: '3.9'
+services:
+    higress:
+        image: 'higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/redis-stack-server:7.4.0-v3'
+        ports:
+            - '6379:6379'
+        container_name: higress-redis
+

@@ -1,0 +1,16 @@
+server:
+  port: 9998
+
+spring:
+  application:
+    name: agent-client-demo
+  ai:
+    alibaba:
+      a2a:
+        nacos:
+          # 开启从 Nacos 中自动发现 Agent
+          discovery:
+            enabled: true
+          server-addr: ${NACOS_ADDRESS:localhost:8848}
+          username: ${NACOS_USERNAME:nacos}
+          password: ${NACOS_PASSWORD:nacos}
