@@ -1,0 +1,124 @@
+{
+  "name": "MCP 集成演示 - 商品搜索与订单",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger-001",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:19002/tools/search_products",
+        "authentication": "none",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"keyword\": \"iPhone\"\n}",
+        "options": {}
+      },
+      "id": "search-products-002",
+      "name": "搜索商品 (MCP)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "options": {}
+      },
+      "id": "extract-product-003",
+      "name": "提取商品信息",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:19002/tools/create_order",
+        "authentication": "none",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"product_id\": {{ $json.product_id }},\n  \"quantity\": {{ $json.quantity }},\n  \"address\": \"{{ $json.address }}\"\n}",
+        "options": {}
+      },
+      "id": "create-order-004",
+      "name": "创建订单 (MCP)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "options": {}
+      },
+      "id": "format-output-005",
+      "name": "格式化输出",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [1120, 300]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "搜索商品 (MCP)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "搜索商品 (MCP)": {
+      "main": [
+        [
+          {
+            "node": "提取商品信息",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "提取商品信息": {
+      "main": [
+        [
+          {
+            "node": "创建订单 (MCP)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "创建订单 (MCP)": {
+      "main": [
+        [
+          {
+            "node": "格式化输出",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-04-14T15:00:00.000Z",
+  "versionId": "1"
+}

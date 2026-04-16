@@ -1,0 +1,100 @@
+{
+  "tools": [
+    {
+      "name": "root__get",
+      "description": "Root",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "metadata": {
+        "path": "/",
+        "method": "GET",
+        "openapi_operationId": "root__get"
+      }
+    },
+    {
+      "name": "get_weather_api_weather_get",
+      "description": "查询天气信息",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "城市名称"
+          }
+        },
+        "required": [
+          "city"
+        ]
+      },
+      "metadata": {
+        "path": "/api/weather",
+        "method": "GET",
+        "openapi_operationId": "get_weather_api_weather_get"
+      }
+    },
+    {
+      "name": "search_products_api_products_get",
+      "description": "搜索商品",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "description": "搜索关键词"
+          }
+        },
+        "required": []
+      },
+      "metadata": {
+        "path": "/api/products",
+        "method": "GET",
+        "openapi_operationId": "search_products_api_products_get"
+      }
+    },
+    {
+      "name": "get_product_api_products__product_id__get",
+      "description": "获取商品详情",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "metadata": {
+        "path": "/api/products/{product_id}",
+        "method": "GET",
+        "openapi_operationId": "get_product_api_products__product_id__get"
+      }
+    },
+    {
+      "name": "create_order_api_order_create_post",
+      "description": "创建订单",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "metadata": {
+        "path": "/api/order/create",
+        "method": "POST",
+        "openapi_operationId": "create_order_api_order_create_post"
+      }
+    },
+    {
+      "name": "get_time_api_time_get",
+      "description": "获取服务器时间",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "metadata": {
+        "path": "/api/time",
+        "method": "GET",
+        "openapi_operationId": "get_time_api_time_get"
+      }
+    }
+  ]
+}

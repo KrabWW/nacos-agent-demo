@@ -1,0 +1,157 @@
+{
+  "name": "n8n MCP 客户端配置指南",
+  "description": "配置 n8n 作为 MCP 客户端连接到 Higress MCP Server",
+  "higress_mcp_server": {
+    "endpoint": "http://localhost:8080/mcp",
+    "transport": "http",
+    "capabilities": {
+      "tools": true,
+      "resources": false,
+      "prompts": false
+    },
+    "tools": [
+      {
+        "name": "query_weather",
+        "description": "查询指定城市的天气信息，包括温度、湿度、风力等",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string",
+              "description": "城市名称"
+            }
+          },
+          "required": ["city"]
+        }
+      },
+      {
+        "name": "search_products",
+        "description": "根据关键词搜索商品",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "keyword": {
+              "type": "string",
+              "description": "搜索关键词"
+            }
+          },
+          "required": []
+          }
+        }
+      },
+      {
+        "name": "get_product_detail",
+        "description": "根据商品ID获取商品详细信息",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "product_id": {
+              "type": "integer",
+              "description": "商品ID"
+            }
+          },
+          "required": ["product_id"]
+        }
+      },
+      {
+        "name": "create_order",
+        "description": "创建订单，需要指定商品ID和数量",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "product_id": {
+              "type": "integer",
+              "description": "商品ID"
+            },
+            "quantity": {
+              "type": "integer",
+              "description": "购买数量"
+            },
+            "address": {
+              "type": "string",
+              "description": "收货地址"
+            }
+          },
+          "required": ["product_id"]
+        }
+      },
+      {
+        "name": "get_server_time",
+        "description": "获取服务器当前时间",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    ]
+  },
+  "n8n_mcp_client_config": {
+    "mcpServers": {
+      "higress-rest-api": {
+        "transport": {
+          "type": "http",
+          "url": "http://localhost:8080/mcp"
+        },
+        "capabilities": {
+          "tools": true
+        }
+      }
+    }
+  },
+  "n8n_workflow_example": {
+    "workflow_name": "MCP 集成演示 - 商品搜索与订单创建",
+    "nodes": [
+      {
+        "type": "manualTrigger",
+        "name": "手动触发",
+        "position": [240, 300]
+      },
+      {
+        "type": "n8n-nodes-base.mcpTool",
+        "name": "搜索商品 (MCP)",
+        "position": [460, 300],
+        "parameters": {
+          "tool": "search_products",
+          "server": "higress-rest-api",
+          "arguments": {
+            "keyword": "iPhone"
+          }
+        }
+      },
+      {
+        "type": "n8n-nodes-base.mcpTool",
+        "name": "创建订单 (MCP)",
+        "position": [680, 300],
+        "parameters": {
+          "tool": "create_order",
+          "server": "higress-rest-api",
+          "arguments": {
+            "product_id": "={{ $json.data.items[0].id }}",
+            "quantity": 2,
+            "address": "北京市朝阳区"
+          }
+        }
+      }
+    ],
+    "connections": [
+      {
+        "from": "手动触发",
+        "to": "搜索商品 (MCP)"
+      },
+      {
+        "from": "搜索商品 (MCP)",
+        "to": "创建订单 (MCP)"
+      }
+    ]
+  },
+  "instructions": {
+    "step_1": "确保 Higress MCP Server 正在运行 (http://localhost:8080/mcp)",
+    "step_2": "在 n8n 中添加 MCP 客户端配置",
+    "step_3": "测试 MCP 工具连接",
+    "step_4": "创建工作流使用 MCP 工具节点",
+    "step_5": "执行工作流验证端到端集成"
+  },
+  "architecture_diagram": "REST API (19001) → Higress MCP Server (8080) → n8n MCP Client → Workflow Execution",
+  "status": "配置完成，等待 n8n MCP 客户端连接测试"
+}
